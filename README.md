@@ -39,7 +39,7 @@ git clone https://github.com/pamanloki/marchi ~/.local/share/marchi/repo
 The installer will:
 
 1. **preflight** — confirm you're on Void with `sudo`.
-2. **packages** — `xbps-install` niri, Waybar, alacritty, fuzzel, mako,
+2. **packages** — `xbps-install` niri, Waybar, foot, fuzzel, mako,
    swaylock/swayidle/swaybg, PipeWire, NetworkManager, Bluetooth, portals,
    polkit, fonts, and a few extras. Missing package names are reported, never
    fatal.
@@ -92,7 +92,7 @@ brightnessctl / playerctl.
 
 Each theme is one file — `themes/<name>/colors.sh` — a palette and nothing
 else. `marchi-theme-set` reads it and **generates** every derived config
-(alacritty, waybar, mako, swaylock, fuzzel) into
+(foot, waybar, mako, swaylock, fuzzel) into
 `~/.local/state/marchi/current/theme/`, patches niri's focus-ring colors in
 place, and live-reloads the running apps. Deployed configs point at the
 generated files, so a switch is instant and consistent.
@@ -137,7 +137,7 @@ marchi update           marchi version              marchi help
 marchi/
 ├── install.sh              # entry point
 ├── install/                # preflight, packages, config, services, session
-├── config/                 # niri, waybar, alacritty (deployed to ~/.config)
+├── config/                 # niri, waybar, foot (deployed to ~/.config)
 ├── bin/                    # marchi-* scripts (deployed to ~/.local/bin)
 ├── themes/<name>/colors.sh # palettes (single source of truth)
 └── data/emoji.txt          # emoji picker data

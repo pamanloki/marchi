@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # marchi-launch-terminal [command...]
-# Opens the preferred terminal ($MARCHI_TERMINAL or alacritty). Any arguments
-# are run as a command inside it.
+# Opens the preferred terminal ($MARCHI_TERMINAL or foot). Any arguments are
+# run as a command inside it.
 set -euo pipefail
-term="${MARCHI_TERMINAL:-alacritty}"
+term="${MARCHI_TERMINAL:-foot}"
 if [ $# -gt 0 ]; then
   case "$term" in
-    alacritty|kitty|foot|ghostty) exec "$term" -e "$@" ;;
-    *) exec "$term" -e "$@" ;;
+    foot)                exec "$term" "$@" ;;            # foot takes the command directly
+    alacritty|kitty|ghostty) exec "$term" -e "$@" ;;
+    *)                   exec "$term" -e "$@" ;;
   esac
 else
   exec "$term"

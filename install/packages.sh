@@ -7,7 +7,7 @@ green() { printf '\033[32m%s\033[0m\n' "$*"; }
 yellow(){ printf '\033[33m%s\033[0m\n' "$*"; }
 
 # Compositor + core desktop
-CORE=(niri Waybar alacritty fuzzel mako swaylock swayidle swaybg wlsunset
+CORE=(niri Waybar foot fuzzel mako swaylock swayidle swaybg wlsunset
       wl-clipboard cliphist grim slurp brightnessctl playerctl)
 
 # Audio

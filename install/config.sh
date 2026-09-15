@@ -13,7 +13,7 @@ BACKUP="$HOME/.local/share/marchi/backup-$(date +%Y%m%d-%H%M%S)"
 green() { printf '\033[32m%s\033[0m\n' "$*"; }
 
 mkdir -p "$CFG" "$BIN" "$SHARE" "$STATE/current/theme" \
-         "$CFG/niri" "$CFG/waybar" "$CFG/alacritty" "$CFG/fuzzel" "$CFG/mako" \
+         "$CFG/niri" "$CFG/waybar" "$CFG/foot" "$CFG/fuzzel" "$CFG/mako" \
          "$HOME/Pictures/Screenshots"
 
 backup() {
@@ -40,7 +40,7 @@ backup "$CFG/niri/config.kdl"
 cp -f "$REPO/config/niri/config.kdl"      "$CFG/niri/config.kdl"
 backup "$CFG/waybar/config.jsonc"; cp -f "$REPO/config/waybar/config.jsonc" "$CFG/waybar/config.jsonc"
 backup "$CFG/waybar/style.css";    cp -f "$REPO/config/waybar/style.css"    "$CFG/waybar/style.css"
-backup "$CFG/alacritty/alacritty.toml"; cp -f "$REPO/config/alacritty/alacritty.toml" "$CFG/alacritty/alacritty.toml"
+backup "$CFG/foot/foot.ini"; cp -f "$REPO/config/foot/foot.ini" "$CFG/foot/foot.ini"
 
 # fuzzel + mako read the generated theme files via a stable symlink.
 backup "$CFG/fuzzel/fuzzel.ini"

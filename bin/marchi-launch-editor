@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Opens the preferred editor. GUI editor if set via $MARCHI_GUI_EDITOR,
+# otherwise $EDITOR (default nvim) inside a terminal.
+set -euo pipefail
+if [ -n "${MARCHI_GUI_EDITOR:-}" ]; then exec "$MARCHI_GUI_EDITOR" "$@"; fi
+exec marchi-launch-terminal "${EDITOR:-nvim}" "$@"

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Clipboard history picker (cliphist + fuzzel).
+set -euo pipefail
+command -v cliphist >/dev/null 2>&1 || { notify-send -a marchi "Clipboard" "cliphist not installed" 2>/dev/null; exit 1; }
+sel=$(cliphist list | fuzzel --dmenu --prompt "clipboard " 2>/dev/null) || exit 0
+[ -n "$sel" ] && printf '%s' "$sel" | cliphist decode | wl-copy

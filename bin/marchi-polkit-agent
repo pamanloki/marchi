@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Start whichever polkit authentication agent is installed.
+set -euo pipefail
+for agent in \
+  /usr/libexec/polkit-gnome-authentication-agent-1 \
+  /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 \
+  /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 \
+  /usr/libexec/mate-polkit/polkit-mate-authentication-agent-1 \
+  /usr/bin/lxqt-policykit-agent \
+  /usr/bin/lxpolkit; do
+  if [ -x "$agent" ]; then exec "$agent"; fi
+done
+echo "marchi: no polkit agent found" >&2

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Opens the preferred file manager. Override with $MARCHI_FILEMANAGER.
+set -euo pipefail
+if [ -n "${MARCHI_FILEMANAGER:-}" ]; then exec "$MARCHI_FILEMANAGER" "$@"; fi
+for f in nautilus thunar nemo pcmanfm-qt pcmanfm dolphin; do
+  if command -v "$f" >/dev/null 2>&1; then exec "$f" "$@"; fi
+done
+# TUI fallback.
+exec marchi-launch-terminal "${MARCHI_TUI_FILEMANAGER:-yazi}"

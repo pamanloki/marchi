@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# marchi-wallpaper [--menu] [PATH]
+#
+# Manages the desktop background with swaybg. Each theme may ship images in its
+# backgrounds/ folder; if none exist, falls back to a solid color from the theme.
+set -euo pipefail
+
+MARCHI_STATE="${XDG_STATE_HOME:-$HOME/.local/state}/marchi"
+CURRENT="$MARCHI_STATE/current"
+SRC="$CURRENT/source"
+
+apply() {
+  local img="$1"
+  # Persist choice.
+  [ -n "$img" ] && ln -sfn "$img" "$CURRENT/background"
+  pkill -x swaybg 2>/dev/null || true
+  if [ -n "$img" ] && [ -f "$img" ]; then
+    setsid -f swaybg -i "$img" -m fill >/dev/null 2>&1
+  else
+    local bg="#1a1b26"
+    [ -f "$CURRENT/theme/colors.sh" ] && bg=$(. "$CURRENT/theme/colors.sh"; printf '%s' "$background")
+    setsid -f swaybg -c "$bg" >/dev/null 2>&1
+  fi
+}
+
+list_backgrounds() {
+  [ -d "$SRC/backgrounds" ] || return 0
+  find -L "$SRC/backgrounds" -type f \
+    \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) 2>/dev/null | sort
+}
+
+case "${1:-}" in
+  --menu)
+    mapfile -t files < <(list_backgrounds)
+    [ ${#files[@]} -gt 0 ] || { notify-send -a marchi "Wallpaper" "No images in current theme" 2>/dev/null; exit 0; }
+    declare -A path_of
+    list=""
+    for f in "${files[@]}"; do
+      base=$(basename "$f")
+      path_of["$base"]="$f"
+      list+="$base"$'\n'
+    done
+    choice=$(printf '%s' "$list" | fuzzel --dmenu --prompt "wallpaper " 2>/dev/null) || exit 0
+    [ -n "$choice" ] && apply "${path_of[$choice]}"
+    ;;
+  --next)
+    mapfile -t files < <(list_backgrounds)
+    [ ${#files[@]} -gt 0 ] || { apply ""; exit 0; }
+    cur=$(readlink -f "$CURRENT/background" 2>/dev/null || true)
+    next="${files[0]}"; found=0
+    for i in "${!files[@]}"; do
+      if [ "$(readlink -f "${files[$i]}")" = "$cur" ]; then
+        next="${files[$(( (i+1) % ${#files[@]} ))]}"; found=1; break
+      fi
+    done
+    apply "$next"
+    ;;
+  "" )
+    # Restore persisted wallpaper, or first background, or solid color.
+    if [ -e "$CURRENT/background" ]; then
+      apply "$(readlink -f "$CURRENT/background")"
+    else
+      first=$(list_backgrounds | head -1)
+      apply "${first:-}"
+    fi
+    ;;
+  *)
+    apply "$1"
+    ;;
+esac

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# marchi-nightlight [--toggle|--on|--off]  (wlsunset)
+set -euo pipefail
+command -v wlsunset >/dev/null 2>&1 || { notify-send -a marchi "Nightlight" "wlsunset not installed" 2>/dev/null; exit 1; }
+# Latitude/longitude via env, or a fixed day/night temperature schedule.
+LAT="${MARCHI_LAT:-}"
+LON="${MARCHI_LON:-}"
+start() {
+  pkill -x wlsunset 2>/dev/null || true
+  if [ -n "$LAT" ] && [ -n "$LON" ]; then
+    setsid -f wlsunset -l "$LAT" -L "$LON" >/dev/null 2>&1
+  else
+    setsid -f wlsunset -t 4000 -T 6500 -S 07:00 -s 20:00 >/dev/null 2>&1
+  fi
+}
+case "${1:---toggle}" in
+  --on) start; notify-send -a marchi "Nightlight" "On" 2>/dev/null || true ;;
+  --off) pkill -x wlsunset 2>/dev/null || true; notify-send -a marchi "Nightlight" "Off" 2>/dev/null || true ;;
+  --toggle)
+    if pgrep -x wlsunset >/dev/null 2>&1; then
+      pkill -x wlsunset; notify-send -a marchi "Nightlight" "Off" 2>/dev/null || true
+    else
+      start; notify-send -a marchi "Nightlight" "On" 2>/dev/null || true
+    fi ;;
+esac

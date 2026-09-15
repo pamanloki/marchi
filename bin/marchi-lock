@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Lock the screen with swaylock using the current theme.
+set -euo pipefail
+MARCHI_STATE="${XDG_STATE_HOME:-$HOME/.local/state}/marchi"
+conf="$MARCHI_STATE/current/theme/swaylock.conf"
+bg="$MARCHI_STATE/current/background"
+
+args=()
+[ -f "$conf" ] && args+=(-C "$conf")
+if [ -e "$bg" ]; then
+  args+=(-i "$(readlink -f "$bg")" -s fill)
+fi
+exec swaylock "${args[@]}"

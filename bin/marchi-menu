@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# marchi-menu [system|network]
+#
+# A small fuzzel-driven command menu, in the spirit of Omarchy's SUPER menu.
+set -euo pipefail
+
+menu() { fuzzel --dmenu --prompt "$1 " 2>/dev/null; }
+
+power_action() {
+  # Prefer loginctl (elogind on Void); fall back to sudo shutdown/reboot.
+  case "$1" in
+    suspend)  loginctl suspend 2>/dev/null || zzz 2>/dev/null || systemctl suspend ;;
+    reboot)   loginctl reboot 2>/dev/null || sudo shutdown -r now ;;
+    poweroff) loginctl poweroff 2>/dev/null || sudo shutdown -h now ;;
+    logout)   niri msg action quit --skip-confirmation ;;
+    lock)     marchi-lock ;;
+  esac
+}
+
+system_menu() {
+  choice=$(printf '%s\n' \
+    " Lock" \
+    " Suspend" \
+    "󰗽 Logout" \
+    " Reboot" \
+    "⏻ Shutdown" \
+    "󰃟 Theme" \
+    "󰸉 Wallpaper" \
+    " Restart bar" | menu "system")
+  case "$choice" in
+    *Lock)     power_action lock ;;
+    *Suspend)  power_action suspend ;;
+    *Logout)   power_action logout ;;
+    *Reboot)   power_action reboot ;;
+    *Shutdown) power_action poweroff ;;
+    *Theme)    marchi-theme-menu ;;
+    *Wallpaper) marchi-wallpaper --menu ;;
+    *"Restart bar") pkill waybar 2>/dev/null || true; setsid -f waybar >/dev/null 2>&1 ;;
+  esac
+}
+
+network_menu() {
+  if command -v nmtui >/dev/null 2>&1; then
+    exec marchi-launch-terminal nmtui
+  elif command -v nm-connection-editor >/dev/null 2>&1; then
+    exec nm-connection-editor
+  else
+    notify-send -a marchi "Network" "NetworkManager tools not found" 2>/dev/null || true
+  fi
+}
+
+case "${1:-system}" in
+  network) network_menu ;;
+  *)       system_menu ;;
+esac

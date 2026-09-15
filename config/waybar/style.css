@@ -1,0 +1,112 @@
+/* marchi :: waybar style
+ * Colors come from the active theme, generated into the state dir by
+ * marchi-theme-set. The @import path is relative to this file.
+ * If the import is missing (theme not yet applied) the fallbacks below apply. */
+
+@define-color background #1a1b26;
+@define-color foreground #a9b1d6;
+@define-color accent     #7aa2f7;
+@define-color muted      #414868;
+@define-color red        #f7768e;
+@define-color green      #9ece6a;
+@define-color yellow     #e0af68;
+
+@import "../../.local/state/marchi/current/theme/waybar.css";
+
+* {
+  font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 0;
+}
+
+window#waybar {
+  background: transparent;
+  color: @foreground;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+  background-color: @background;
+  border-radius: 10px;
+  padding: 0 6px;
+}
+
+.modules-left  { margin-left: 0; }
+.modules-right { margin-right: 0; }
+
+#custom-menu {
+  color: @accent;
+  font-size: 16px;
+  padding: 0 12px 0 10px;
+}
+
+#workspaces { padding: 0 4px; }
+
+#workspaces button {
+  color: @muted;
+  padding: 0 6px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+}
+
+#workspaces button.active {
+  color: @accent;
+}
+
+#workspaces button.urgent {
+  color: @red;
+}
+
+#workspaces button:hover {
+  color: @foreground;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+#window {
+  color: @foreground;
+  padding: 0 10px;
+}
+
+window#waybar.empty #window {
+  background: transparent;
+}
+
+#clock {
+  color: @foreground;
+  padding: 0 12px;
+}
+
+#tray,
+#mpris,
+#network,
+#bluetooth,
+#pulseaudio,
+#backlight,
+#battery,
+#custom-notifications {
+  padding: 0 8px;
+  color: @foreground;
+}
+
+#custom-notifications { color: @accent; padding-right: 12px; }
+
+#battery.warning  { color: @yellow; }
+#battery.critical { color: @red; }
+#battery.charging { color: @green; }
+
+#network.disconnected { color: @red; }
+
+#tray > .passive { -gtk-icon-effect: dim; }
+#tray > .needs-attention { -gtk-icon-effect: highlight; }
+
+tooltip {
+  background: @background;
+  border: 1px solid @accent;
+  border-radius: 8px;
+}
+tooltip label { color: @foreground; }

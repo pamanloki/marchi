@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# marchi :: top-level helper
+set -euo pipefail
+
+MARCHI_CONFIG="${MARCHI_CONFIG:-$HOME/.config/marchi}"
+MARCHI_STATE="${XDG_STATE_HOME:-$HOME/.local/state}/marchi"
+
+usage() {
+  cat <<'EOF'
+marchi — an Omarchy-inspired niri desktop for Void Linux
+
+Usage: marchi <command> [args]
+
+Commands:
+  theme [name]      Set theme, or open the theme picker if no name given
+  theme-list        List available themes
+  wallpaper         Restore/refresh the wallpaper
+  wallpaper-next    Cycle to the next wallpaper in the current theme
+  menu              Open the system/power menu
+  lock              Lock the screen
+  keys              Show the keybinding cheat sheet
+  reload            Reload waybar, mako, and the wallpaper
+  update            git pull the marchi repo and redeploy configs
+  version           Show version
+  help              Show this help
+EOF
+}
+
+case "${1:-help}" in
+  theme)
+    shift
+    if [ $# -ge 1 ]; then exec marchi-theme-set "$1"; else exec marchi-theme-menu; fi ;;
+  theme-list)
+    for d in "$MARCHI_CONFIG/themes"/*/; do [ -f "$d/colors.sh" ] && basename "$d"; done ;;
+  wallpaper)      exec marchi-wallpaper ;;
+  wallpaper-next) exec marchi-wallpaper --next ;;
+  menu)           exec marchi-menu ;;
+  lock)           exec marchi-lock ;;
+  keys)           exec marchi-keybindings ;;
+  reload)
+    pkill -SIGUSR2 waybar 2>/dev/null || true
+    makoctl reload 2>/dev/null || true
+    marchi-wallpaper >/dev/null 2>&1 || true
+    echo "marchi: reloaded" ;;
+  update)
+    repo="${MARCHI_REPO:-$HOME/.local/share/marchi/repo}"
+    [ -d "$repo/.git" ] || { echo "marchi: repo not found at $repo (set MARCHI_REPO)"; exit 1; }
+    git -C "$repo" pull --ff-only
+    exec "$repo/install/config.sh" ;;
+  version)
+    cat "$MARCHI_CONFIG/version" 2>/dev/null || echo "unknown" ;;
+  help|--help|-h) usage ;;
+  *) echo "marchi: unknown command '$1'" >&2; usage; exit 1 ;;
+esac

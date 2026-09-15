@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Pick a theme with fuzzel.
+set -euo pipefail
+MARCHI_CONFIG="${MARCHI_CONFIG:-$HOME/.config/marchi}"
+MARCHI_THEMES="$MARCHI_CONFIG/themes"
+
+[ -d "$MARCHI_THEMES" ] || { echo "no themes dir: $MARCHI_THEMES" >&2; exit 1; }
+
+declare -A slug_of
+list=""
+for d in "$MARCHI_THEMES"/*/; do
+  [ -f "$d/colors.sh" ] || continue
+  slug=$(basename "$d")
+  title=$(. "$d/colors.sh"; printf '%s' "${name:-$slug}")
+  slug_of["$title"]="$slug"
+  list+="$title"$'\n'
+done
+
+choice=$(printf '%s' "$list" | sort | fuzzel --dmenu --prompt "theme " 2>/dev/null) || exit 0
+[ -n "$choice" ] || exit 0
+target="${slug_of[$choice]:-$choice}"
+exec marchi-theme-set "$target"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# marchi-session — launch niri with the marchi environment.
+# Suitable as the Exec of a wayland-session .desktop entry, or run from a TTY.
+export PATH="$HOME/.local/bin:$PATH"
+export XDG_CURRENT_DESKTOP="niri"
+export XDG_SESSION_TYPE="wayland"
+# Import env into the D-Bus activation environment once niri is up (best effort).
+exec dbus-run-session niri

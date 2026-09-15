@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Opens the preferred browser. Override with $MARCHI_BROWSER.
+set -euo pipefail
+if [ -n "${MARCHI_BROWSER:-}" ]; then exec "$MARCHI_BROWSER" "$@"; fi
+for b in chromium chrome google-chrome-stable brave firefox; do
+  if command -v "$b" >/dev/null 2>&1; then exec "$b" "$@"; fi
+done
+if command -v xdg-open >/dev/null 2>&1; then exec xdg-open "https://"; fi
+notify-send -a marchi "Browser" "No browser found" 2>/dev/null || true

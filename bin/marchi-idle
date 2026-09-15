@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# marchi-idle [--toggle]
+#
+# Runs swayidle: dim/lock on idle, turn the screen off later, lock before sleep.
+# With --toggle, turns idle management on or off (handy for watching video).
+set -euo pipefail
+
+RUN="${XDG_RUNTIME_DIR:-/tmp}"
+PIDFILE="$RUN/marchi-idle.pid"
+
+start() {
+  stop
+  setsid -f swayidle -w \
+    timeout 300  'marchi-lock' \
+    timeout 600  'niri msg action power-off-monitors' \
+    resume       'niri msg action power-on-monitors' \
+    before-sleep 'marchi-lock' >/dev/null 2>&1 &
+  echo $! >"$PIDFILE"
+}
+
+stop() {
+  if [ -f "$PIDFILE" ]; then
+    kill "$(cat "$PIDFILE")" 2>/dev/null || true
+    rm -f "$PIDFILE"
+  fi
+  pkill -x swayidle 2>/dev/null || true
+}
+
+case "${1:-}" in
+  --toggle)
+    if pgrep -x swayidle >/dev/null 2>&1; then
+      stop
+      notify-send -a marchi "Idle" "Idle locking disabled" 2>/dev/null || true
+    else
+      start
+      notify-send -a marchi "Idle" "Idle locking enabled" 2>/dev/null || true
+    fi
+    ;;
+  --stop) stop ;;
+  *) start ;;
+esac

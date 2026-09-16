@@ -41,16 +41,22 @@ git clone https://github.com/pamanloki/marchi ~/.local/share/marchi/repo \
 The installer will:
 
 1. **preflight** — confirm you're on Void with `sudo`.
-2. **packages** — `xbps-install` niri, Waybar, foot, fuzzel, mako,
+2. **repos** — enable the
+   [solocco-void-packages](https://github.com/solocco/solocco-void-packages)
+   repository for fresh binary packages (e.g. `yazi-bin`). niri and Waybar
+   still come from the official Void repos.
+3. **packages** — `xbps-install` niri, Waybar, foot, fuzzel, mako,
    swaylock/swayidle/swaybg, PipeWire, NetworkManager, Bluetooth, portals,
    polkit, fonts, and a few extras. Missing package names are reported, never
    fatal.
-3. **config** — deploy configs to `~/.config`, scripts to `~/.local/bin`,
+4. **fonts** — download JetBrains Mono Nerd Font (only that font) into
+   `~/.local/share/fonts`.
+5. **config** — deploy configs to `~/.config`, scripts to `~/.local/bin`,
    themes to `~/.config/marchi/themes`, and apply the default theme. Existing
    configs are backed up to `~/.local/share/marchi/backup-*`.
-4. **services** — enable the runit services (`dbus`, `elogind`, `polkitd`,
+6. **services** — enable the runit services (`dbus`, `elogind`, `polkitd`,
    `NetworkManager`, `bluetoothd`) and add you to the right groups.
-5. **session** — install a `marchi (niri)` Wayland session entry.
+7. **session** — install a `marchi (niri)` Wayland session entry.
 
 Then **reboot**, log in, and pick the **marchi (niri)** session — or from a TTY
 run `marchi-session`.

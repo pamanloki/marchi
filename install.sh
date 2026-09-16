@@ -25,6 +25,7 @@ bold "
 "
 
 bash "$HERE/install/preflight.sh"
+bash "$HERE/install/repos.sh"
 bash "$HERE/install/packages.sh"
 bash "$HERE/install/fonts.sh"
 bash "$HERE/install/config.sh"

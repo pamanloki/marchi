@@ -28,8 +28,8 @@ SESSION=(xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-wlr
 FONTS=(noto-fonts-ttf noto-fonts-emoji font-awesome
        papirus-icon-theme gnome-themes-extra qt6-wayland)
 
-# Handy extras
-EXTRAS=(Thunar btop jq yazi git curl unzip)
+# Handy extras (yazi-bin comes from the solocco repo enabled in repos.sh)
+EXTRAS=(Thunar btop jq yazi-bin git curl unzip)
 
 ALL=("${CORE[@]}" "${AUDIO[@]}" "${NET[@]}" "${SESSION[@]}" "${FONTS[@]}" "${EXTRAS[@]}")
 

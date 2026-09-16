@@ -32,7 +32,9 @@ niri-native moves for the column model (consume/expel, preset widths, overview).
 ## Install
 
 ```sh
-git clone https://github.com/pamanloki/marchi ~/.local/share/marchi/repo
+# Clone if new, or update if already cloned (safe to re-run).
+git clone https://github.com/pamanloki/marchi ~/.local/share/marchi/repo \
+  || git -C ~/.local/share/marchi/repo pull
 ~/.local/share/marchi/repo/install.sh
 ```
 
@@ -150,6 +152,10 @@ marchi/
 - **Monitors, input, more binds**: edit `~/.config/niri/config.kdl`
   (niri live-reloads it). Colors in that file are managed by the theme system —
   keep the `// marchi:accent` / `// marchi:muted` markers intact.
+- **Fonts**: marchi uses **JetBrains Mono Nerd Font**. Rather than pull Void's
+  multi-GB `nerd-fonts` package, `install/fonts.sh` downloads *only* that font
+  (a small zip from the Nerd Fonts release) into `~/.local/share/fonts`. Re-run
+  `install/fonts.sh` any time to (re)install it.
 
 ## License
 
